@@ -1,0 +1,347 @@
+/**
+ * Admin Styles
+ *
+ * Styles for Boxi PanelAlpha Integration admin pages.
+ */
+
+/* ==================== Global Admin Styles ==================== */
+
+.boxi-settings,
+.boxi-logs {
+	max-width: 1200px;
+}
+
+/* ==================== Tab Navigation ==================== */
+
+.boxi-settings .nav-tab-wrapper {
+	margin: 20px 0;
+	border-bottom: 1px solid #ccc;
+}
+
+.boxi-settings .tab-content {
+	display: none;
+	padding: 20px 0;
+}
+
+.boxi-settings .tab-content.active {
+	display: block;
+}
+
+/* ==================== Forms ==================== */
+
+.boxi-settings .form-table th {
+	width: 200px;
+}
+
+.boxi-settings .form-table input[type="url"],
+.boxi-settings .form-table input[type="password"],
+.boxi-settings .form-table input[type="text"],
+.boxi-settings .form-table select {
+	width: 100%;
+	max-width: 400px;
+}
+
+.boxi-settings .submit {
+	padding: 0;
+	margin: 20px 0;
+}
+
+/* ==================== Cards ==================== */
+
+.boxi-mapping-form.card {
+	max-width: none;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.boxi-mapping-form h3 {
+	margin-top: 0;
+}
+
+.boxi-mappings-list {
+	margin-top: 30px;
+}
+
+/* ==================== Status Messages ==================== */
+
+#connection-status {
+	margin-top: 15px;
+	padding: 12px;
+}
+
+#connection-status.notice-success {
+	border-left-color: #46b450;
+	background: #f0fff4;
+}
+
+#connection-status.notice-error {
+	border-left-color: #dc3232;
+	background: #fff0f0;
+}
+
+/* ==================== Product Mappings Table ==================== */
+
+.boxi-mappings-list table {
+	margin-top: 15px;
+}
+
+.boxi-mappings-list table td {
+	vertical-align: middle;
+}
+
+.boxi-mappings-list .dashicons {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+/* ==================== Event Logs ==================== */
+
+.boxi-log-filters.card {
+	max-width: none;
+	padding: 15px 20px;
+	margin: 20px 0;
+}
+
+.boxi-log-filters form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	align-items: flex-end;
+}
+
+.boxi-log-filters .filter-group {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.boxi-log-filters .filter-group label {
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.boxi-log-filters .filter-group select,
+.boxi-log-filters .filter-group input {
+	min-width: 150px;
+}
+
+.boxi-log-stats {
+	margin: 15px 0;
+	font-size: 14px;
+	color: #666;
+}
+
+/* Log Level Badges */
+
+.log-level-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	border-radius: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: #fff;
+}
+
+.log-level-badge.log-level-debug {
+	background-color: #999;
+}
+
+.log-level-badge.log-level-info {
+	background-color: #00a0d2;
+}
+
+.log-level-badge.log-level-warning {
+	background-color: #ffb900;
+}
+
+.log-level-badge.log-level-error {
+	background-color: #dc3232;
+}
+
+/* Log Table Styling */
+
+.boxi-logs-table {
+	margin-top: 15px;
+}
+
+.boxi-logs-table .column-timestamp {
+	width: 150px;
+}
+
+.boxi-logs-table .column-level {
+	width: 80px;
+}
+
+.boxi-logs-table .column-event-type {
+	width: 150px;
+}
+
+.boxi-logs-table .column-order {
+	width: 80px;
+}
+
+.boxi-logs-table .column-message {
+	width: auto;
+}
+
+.boxi-logs-table .column-actions {
+	width: 120px;
+}
+
+.boxi-logs-table .text-muted {
+	color: #999;
+}
+
+/* Log Level Row Styling */
+
+.boxi-logs-table tr.log-level-error {
+	background-color: #fff5f5;
+}
+
+.boxi-logs-table tr.log-level-warning {
+	background-color: #fffbf0;
+}
+
+/* ==================== Modal ==================== */
+
+.boxi-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.7);
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.boxi-modal-content {
+	background: #fff;
+	max-width: 700px;
+	width: 90%;
+	max-height: 80vh;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+}
+
+.boxi-modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 15px 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.boxi-modal-header h2 {
+	margin: 0;
+	font-size: 18px;
+}
+
+.boxi-modal-close {
+	background: none;
+	border: none;
+	font-size: 28px;
+	cursor: pointer;
+	padding: 0;
+	line-height: 1;
+	color: #666;
+	transition: color 0.2s;
+}
+
+.boxi-modal-close:hover {
+	color: #000;
+}
+
+.boxi-modal-body {
+	padding: 20px;
+	overflow-y: auto;
+	flex: 1;
+}
+
+.boxi-modal-body pre {
+	background: #f5f5f5;
+	padding: 15px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	overflow-x: auto;
+	font-size: 13px;
+	line-height: 1.5;
+	max-height: 60vh;
+	overflow-y: auto;
+}
+
+/* ==================== Loading Spinner ==================== */
+
+.boxi-loading {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border: 2px solid #f3f3f3;
+	border-top: 2px solid #3498db;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+	vertical-align: middle;
+	margin-left: 5px;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+/* ==================== Responsive Design ==================== */
+
+@media screen and (max-width: 782px) {
+	.boxi-log-filters form {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.boxi-log-filters .filter-group {
+		width: 100%;
+	}
+
+	.boxi-log-filters .filter-group select,
+	.boxi-log-filters .filter-group input {
+		width: 100%;
+	}
+
+	.boxi-logs-table .column-timestamp,
+	.boxi-logs-table .column-event-type {
+		display: none;
+	}
+
+	.boxi-modal-content {
+		width: 95%;
+		max-height: 90vh;
+	}
+}
+
+/* ==================== Utility Classes ==================== */
+
+.boxi-text-center {
+	text-align: center;
+}
+
+.boxi-text-muted {
+	color: #666;
+}
+
+.boxi-mb-0 {
+	margin-bottom: 0;
+}
+
+.boxi-mt-15 {
+	margin-top: 15px;
+}
+
+.boxi-hidden {
+	display: none !important;
+}

@@ -1,0 +1,41 @@
+# WordPress Test Environment
+docker-compose.override.yml
+.env
+.env.local
+
+# Docker volumes (data persistence)
+# Note: We keep docker-compose.yml in version control
+
+# Logs
+*.log
+wp-content/debug.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# Node modules (if any)
+node_modules/
+
+# Composer (if any)
+vendor/
+
+# WordPress specific (if testing locally)
+wp-config.php
+.htaccess
+
+# Database dumps
+*.sql
+*.sql.gz

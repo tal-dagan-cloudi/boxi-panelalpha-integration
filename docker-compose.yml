@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # MySQL Database for WordPress
+  db:
+    image: mysql:8.0
+    container_name: boxi-test-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - boxi-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  # WordPress with WooCommerce
+  wordpress:
+    image: wordpress:latest
+    container_name: boxi-test-wordpress
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        /* Authentication Unique Keys and Salts */
+        define('AUTH_KEY',         'put your unique phrase here');
+        define('SECURE_AUTH_KEY',  'put your unique phrase here');
+        define('LOGGED_IN_KEY',    'put your unique phrase here');
+        define('NONCE_KEY',        'put your unique phrase here');
+        define('AUTH_SALT',        'put your unique phrase here');
+        define('SECURE_AUTH_SALT', 'put your unique phrase here');
+        define('LOGGED_IN_SALT',   'put your unique phrase here');
+        define('NONCE_SALT',       'put your unique phrase here');
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/boxi-panelalpha-integration
+      - ./docker/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - boxi-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      timeout: 5s
+      retries: 10
+
+  # WP-CLI for automation
+  wpcli:
+    image: wordpress:cli
+    container_name: boxi-test-wpcli
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/boxi-panelalpha-integration
+      - ./docker/setup-wordpress.sh:/setup-wordpress.sh
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    networks:
+      - boxi-network
+    entrypoint: sh
+    command: /setup-wordpress.sh
+
+  # phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: boxi-test-phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: wordpress
+      PMA_PASSWORD: wordpress
+    networks:
+      - boxi-network
+
+volumes:
+  db_data:
+  wordpress_data:
+
+networks:
+  boxi-network:
+    driver: bridge
