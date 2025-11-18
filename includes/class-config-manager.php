@@ -242,6 +242,15 @@ class Boxi_Config_Manager {
 	}
 
 	/**
+	 * Alias for get_all_mappings() for backward compatibility
+	 *
+	 * @return array Array of all product mappings.
+	 */
+	public function get_all_product_mappings() {
+		return $this->get_all_mappings();
+	}
+
+	/**
 	 * Get general settings
 	 *
 	 * @return array Settings array.
