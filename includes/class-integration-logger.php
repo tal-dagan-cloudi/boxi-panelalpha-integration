@@ -88,9 +88,11 @@ class Boxi_Integration_Logger {
 	 * Get logs with filters
 	 *
 	 * @param array $filters Filter criteria.
+	 * @param int   $limit   Maximum number of logs to return (optional).
+	 * @param int   $offset  Offset for pagination (optional).
 	 * @return array Array of log entries.
 	 */
-	public function get_logs( $filters = array() ) {
+	public function get_logs( $filters = array(), $limit = null, $offset = null ) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . self::TABLE_NAME;
@@ -143,15 +145,21 @@ class Boxi_Integration_Logger {
 			}
 		}
 
-		// Build LIMIT clause
-		$limit = 100; // Default limit
-		if ( isset( $filters['limit'] ) ) {
+		// Build LIMIT clause - allow override from parameters
+		if ( null !== $limit ) {
+			$limit = absint( $limit );
+		} elseif ( isset( $filters['limit'] ) ) {
 			$limit = absint( $filters['limit'] );
+		} else {
+			$limit = 100; // Default limit
 		}
 
-		$offset = 0;
-		if ( isset( $filters['offset'] ) ) {
+		if ( null !== $offset ) {
+			$offset = absint( $offset );
+		} elseif ( isset( $filters['offset'] ) ) {
 			$offset = absint( $filters['offset'] );
+		} else {
+			$offset = 0;
 		}
 
 		// Build query
@@ -327,5 +335,15 @@ class Boxi_Integration_Logger {
 	 */
 	public function debug( $message, $context = array() ) {
 		return $this->log( self::LEVEL_DEBUG, $message, $context );
+	}
+
+	/**
+	 * Alias for get_log_count() for backward compatibility
+	 *
+	 * @param array $filters Filter criteria.
+	 * @return int Total count of matching logs.
+	 */
+	public function count_logs( $filters = array() ) {
+		return $this->get_log_count( $filters );
 	}
 }
