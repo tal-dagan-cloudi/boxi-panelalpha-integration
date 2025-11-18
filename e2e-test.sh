@@ -57,8 +57,8 @@ fi
 
 # Test 4: Verify database table exists
 print_info "Test 4: Checking database table creation..."
-TABLE_EXISTS=$(docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress -e "SHOW TABLES LIKE 'wp_boxi_integration_logs';" 2>/dev/null | grep -c "wp_boxi_integration_logs" || echo "0")
-if [ "$TABLE_EXISTS" -eq "1" ]; then
+TABLE_EXISTS=$(docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress -e "SHOW TABLES LIKE 'wp_boxi_integration_logs';" 2>/dev/null | tail -n +2 | grep -c "wp_boxi_integration_logs" || echo "0")
+if [ "$TABLE_EXISTS" -ge "1" ]; then
     print_success "Database table 'wp_boxi_integration_logs' exists"
 else
     print_error "Database table does not exist"
@@ -97,15 +97,15 @@ fi
 
 # Test 8: Create a test order using database
 print_info "Test 8: Creating test order..."
-# Insert post for order
+# Insert post for order (include all required fields to avoid MySQL strict mode errors)
 docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress \
-    -e "INSERT INTO wp_posts (post_author, post_date, post_date_gmt, post_content, post_title, post_status, post_type)
-        VALUES (1, NOW(), UTC_TIMESTAMP(), '', 'Order - E2E Test', 'wc-pending', 'shop_order');" 2>/dev/null
+    -e "INSERT INTO wp_posts (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_type, post_name, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, guid)
+        VALUES (1, NOW(), UTC_TIMESTAMP(), '', 'Order - E2E Test', '', 'wc-pending', 'shop_order', 'order-e2e-test', 'closed', 'closed', '', '', '', NOW(), UTC_TIMESTAMP(), '', 'http://localhost:8080/?post_type=shop_order');" 2>/dev/null
 
 ORDER_ID=$(docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress \
-    -e "SELECT LAST_INSERT_ID();" 2>/dev/null | tail -n 1)
+    -e "SELECT ID FROM wp_posts WHERE post_type='shop_order' AND post_title='Order - E2E Test' ORDER BY ID DESC LIMIT 1;" 2>/dev/null | tail -n 1)
 
-if [ ! -z "$ORDER_ID" ] && [ "$ORDER_ID" -gt "0" ]; then
+if [ ! -z "$ORDER_ID" ] && [ "$ORDER_ID" -gt "0" ] 2>/dev/null; then
     print_success "Created test order #$ORDER_ID"
 else
     print_error "Failed to create order"
@@ -119,7 +119,7 @@ docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress \
         VALUES ('Shared Hosting - Basic', 'line_item', $ORDER_ID);" 2>/dev/null
 
 ITEM_ID=$(docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress \
-    -e "SELECT LAST_INSERT_ID();" 2>/dev/null | tail -n 1)
+    -e "SELECT order_item_id FROM wp_woocommerce_order_items WHERE order_id=$ORDER_ID ORDER BY order_item_id DESC LIMIT 1;" 2>/dev/null | tail -n 1)
 
 docker exec boxi-test-db mysql -u wordpress -pwordpress -D wordpress \
     -e "INSERT INTO wp_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value)
